@@ -9,3 +9,5 @@ pip install -r requirements.txt
  git add .
 git commit -m "Initial project setup"
 git push 
+
+source env/Scripts/activate   pour awtiver le env
