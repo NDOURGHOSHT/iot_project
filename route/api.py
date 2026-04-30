@@ -1,6 +1,7 @@
 from flask import Blueprint, request
 from db import collection
 
+
 api_bp = Blueprint('api', __name__)
 @api_bp.route('/test')
 def test():
@@ -12,6 +13,8 @@ def test():
         "wind": 5
     })
     return "Donnée ajoutée"
+
+
 
 @api_bp.route('/api/data', methods=['POST'])
 def receive_data():
