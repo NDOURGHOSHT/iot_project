@@ -43,6 +43,42 @@ def receive_data():
     collection.insert_one(data)
 
     return {"message": "Donnée reçue"}, 200
+#pour afficher les donnée
+@app.route('/data')
+def get_data():
+    data = collection.find().sort("_id", -1).limit(1)
+
+    for d in data:
+        d["_id"] = str(d["_id"])
+        return d
+
+#rafrechire la page automatiquement
+@app.route('/latest')
+def latest():
+    data = collection.find_one(sort=[("_id", -1)])
+    data["_id"] = str(data["_id"])
+    return data
+
+@app.route('/history')
+def history():
+    return render_template("history.html")
+@app.route('/history-data')
+def history_data():
+    data = list(collection.find().sort("_id", -1).limit(20))
+
+    for d in data:
+        d["_id"] = str(d["_id"])
+
+    return data
+
+#CREE UN PAGE ERREUR 404
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html'), 404
+#CREE UN PAGE ERREUR 500
+@app.errorhandler(500)
+def internal_server_error(e):
+    return render_template('500.html'), 500
 
 # lancer serveur
 if __name__ == '__main__':

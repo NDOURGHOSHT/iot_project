@@ -1,23 +1,64 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Dashboard IoT</title>
-</head>
-<body>
-    
+{% extends "base.html" %}
 
-<h1>Mon Dashboard IoT</h1>
+{% block title %}Poulailler{% endblock %}
 
+{% block content %}
 
-<p>Les données des capteurs apparaîtront ici.</p>
+<h1 class="text-center mb-4"> Poulailler Intelligent </h1>
 
-<h2>Données capteurs</h2>
+<div class="row g-4">
 
-<p>Température : {{ data.temperature }}</p>
-<p>Humidité : {{ data.humidity }}</p>
-<p>Luminosité : {{ data.ldr }}</p>
-<p>Qualité air : {{ data.mq135 }}</p>
-<p>Vent : {{ data.wind }}</p>
+<div class="col-md-4">
+<div class="card text-bg-primary">
+<div class="card-body">
+<h5>Température</h5>
+<h2 id="temp">{{ data.temperature }} °C</h2>
+</div>
+</div>
+</div>
 
-</body>
-</html>
+<div class="col-md-4">
+<div class="card text-bg-success">
+<div class="card-body">
+<h5>Humidité</h5>
+<h2 id="hum">{{ data.humidity }} %</h2>
+</div>
+</div>
+</div>
+
+<div class="col-md-4">
+<div class="card text-bg-warning">
+<div class="card-body">
+<h5>LDR</h5>
+<h2 id="ldr">{{ data.ldr }}</h2>
+</div>
+</div>
+</div>
+
+<div class="col-md-6">
+<div class="card text-bg-danger">
+<div class="card-body">
+<h5>Gaz</h5>
+<h2 id="gaz">{{ data.mq135 }}</h2>
+</div>
+</div>
+</div>
+
+<div class="col-md-6">
+ <div class="card text-bg-dark">
+  <div class="card-body">
+    <h5>Vent</h5>
+    <h2 id="wind">{{ data.wind }} m/s</h2>
+  </div>
+ </div>
+</div>
+
+</div>
+<div class="card mt-4">
+  <div class="card-body">
+    <h5>Température (temps réel)</h5>
+    <canvas id="tempChart"></canvas>
+  </div>
+</div>
+
+{% endblock %}
