@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% block title %}Contrôles — Poulailler IoT{% endblock %}
+
+{% block content %}
+<p class="section-title">Mode de contrôle</p>
+<div class="mode-bar">
+  <button class="mode-btn active" id="btn-auto" onclick="setMode('auto')">Automatique</button>
+  <button class="mode-btn" id="btn-manuel" onclick="setMode('manuel')">Manuel</button>
+</div>
+
+<p class="section-title">Équipements</p>
+<div class="ctrl-grid">
+
+  <div class="ctrl-card" id="card-lampe1">
+    <div class="ctrl-top">
+      <div class="ctrl-icon" id="icon-lampe1">💡</div>
+      <label class="toggle">
+        <input type="checkbox" id="toggle-lampe1" onchange="toggleDevice('lampe1', this.checked)" disabled>
+        <span class="slider"></span>
+      </label>
+    </div>
+    <p class="ctrl-name">Lampe 1</p>
+    <p class="ctrl-status" id="status-lampe1">Éteinte</p>
+  </div>
+
+  <div class="ctrl-card" id="card-lampe2">
+    <div class="ctrl-top">
+      <div class="ctrl-icon" id="icon-lampe2">💡</div>
+      <label class="toggle">
+        <input type="checkbox" id="toggle-lampe2" onchange="toggleDevice('lampe2', this.checked)" disabled>
+        <span class="slider"></span>
+      </label>
+    </div>
+    <p class="ctrl-name">Lampe 2</p>
+    <p class="ctrl-status" id="status-lampe2">Éteinte</p>
+  </div>
+
+  <div class="ctrl-card" id="card-ventilateur">
+    <div class="ctrl-top">
+      <div class="ctrl-icon" id="icon-ventilateur">🌀</div>
+      <label class="toggle">
+        <input type="checkbox" id="toggle-ventilateur" onchange="toggleDevice('ventilateur', this.checked)" disabled>
+        <span class="slider"></span>
+      </label>
+    </div>
+    <p class="ctrl-name">Ventilateur</p>
+    <p class="ctrl-status" id="status-ventilateur">Arrêté</p>
+  </div>
+
+  <div class="ctrl-card" id="card-fenetre1">
+    <div class="ctrl-top">
+        <div class="ctrl-icon" id="icon-fenetre1">
+             <i class="bi bi-wind"></i>
+        </div>
+      <label class="toggle">
+        <input type="checkbox" id="toggle-fenetre1" onchange="toggleDevice('fenetre1', this.checked)" disabled>
+        <span class="slider"></span>
+      </label>
+    </div>
+    <p class="ctrl-name">Fenêtre 1</p>
+    <p class="ctrl-status" id="status-fenetre1">Fermée</p>
+  </div>
+
+  <div class="ctrl-card" id="card-fenetre2">
+    <div class="ctrl-top">
+        <div class="ctrl-icon" id="icon-fenetre1">
+             <i class="bi bi-wind"></i>
+        </div>
+      <label class="toggle">
+        <input type="checkbox" id="toggle-fenetre2" onchange="toggleDevice('fenetre2', this.checked)" disabled>
+        <span class="slider"></span>
+      </label>
+    </div>
+    <p class="ctrl-name">Fenêtre 2</p>
+    <p class="ctrl-status" id="status-fenetre2">Fermée</p>
+  </div>
+
+</div>
+
+<p class="section-title">Journal des actions</p>
+<div class="log-card">
+  <div id="log-list">
+    <div class="log-entry">
+      <span class="log-name" style="color:var(--color-text-secondary)">Aucune action pour l'instant</span>
+      <span class="log-time">—</span>
+      <span class="log-badge badge-off">—</span>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/controls.js') }}"></script>
+{% endblock %}
