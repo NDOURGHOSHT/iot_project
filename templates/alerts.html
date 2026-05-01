@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}Alertes{% endblock %}
+{% block content %}
+<h4 class="mb-3"><i class="bi bi-bell-fill text-danger"></i> Alertes actives</h4>
+{% if active %}
+<div class="table-responsive mb-4">
+  <table class="table table-hover align-middle">
+    <thead class="table-danger">
+      <tr><th>Horodatage</th><th>Type</th><th>Message</th><th>Sévérité</th><th>Action</th></tr>
+    </thead>
+    <tbody>
+      {% for a in active %}
+      <tr id="row-{{ a._id }}">
+        <td>{{ a.timestamp }}</td>
+        <td>{{ a.type }}</td>
+        <td>{{ a.message }}</td>
+        <td><span class="badge bg-{{ 'danger' if a.severity == 'CRITICAL' else 'warning text-dark' }}">{{ a.severity }}</span></td>
+        <td>
+          <button class="btn btn-sm btn-outline-success" onclick="ackAlert('{{ a._id }}')">
+            <i class="bi bi-check2"></i> Acquitter
+          </button>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% else %}
+<div class="alert alert-success"><i class="bi bi-check-circle"></i> Aucune alerte active.</div>
+{% endif %}
+
+<h4 class="mb-3 mt-4"><i class="bi bi-clock-history text-muted"></i> Historique</h4>
+<div class="table-responsive">
+  <table class="table table-sm table-striped">
+    <thead><tr><th>Horodatage</th><th>Type</th><th>Message</th><th>Sévérité</th></tr></thead>
+    <tbody>
+      {% for a in history %}
+      <tr>
+        <td>{{ a.timestamp }}</td><td>{{ a.type }}</td>
+        <td>{{ a.message }}</td>
+        <td><span class="badge bg-secondary">{{ a.severity }}</span></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+function ackAlert(id) {
+  fetch(`/alerts/ack/${id}`, {method: 'PATCH'})
+    .then(() => document.getElementById(`row-${id}`).remove());
+}
+</script>
+{% endblock %}

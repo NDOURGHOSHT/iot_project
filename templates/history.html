@@ -1,63 +1,108 @@
 {% extends "base.html" %}
-
 {% block title %}Historique{% endblock %}
 
 {% block content %}
+<p class="section-title">Historique des données</p>
 
-<h2 class="mb-4">Historique des données</h2>
-
-<div class="card">
-  <div class="card-body">
-    <canvas id="chart-temp"></canvas>
+<div class="sensor-grid mb-4">
+  <div class="sensor-card temp active" onclick="toggleSensor('temperature')" id="btn-temperature">
+    <p class="sensor-label">🌡 Température</p>
+    <p class="sensor-value" style="font-size:14px">Affichée</p>
+  </div>
+  <div class="sensor-card hum" onclick="toggleSensor('humidity')" id="btn-humidity">
+    <p class="sensor-label">💧 Humidité</p>
+    <p class="sensor-value" style="font-size:14px">Masquée</p>
+  </div>
+  <div class="sensor-card ldr" onclick="toggleSensor('ldr')" id="btn-ldr">
+    <p class="sensor-label">☀ Luminosité</p>
+    <p class="sensor-value" style="font-size:14px">Masquée</p>
+  </div>
+  <div class="sensor-card gaz" onclick="toggleSensor('mq135')" id="btn-mq135">
+    <p class="sensor-label">🌿 Gaz MQ135</p>
+    <p class="sensor-value" style="font-size:14px">Masquée</p>
+  </div>
+  <div class="sensor-card wind" onclick="toggleSensor('wind')" id="btn-wind">
+    <p class="sensor-label">💨 Vent</p>
+    <p class="sensor-value" style="font-size:14px">Masquée</p>
   </div>
 </div>
 
+<div class="chart-card">
+  <div class="chart-header">
+    <p class="chart-title">Évolution — 20 dernières mesures</p>
+    <p class="chart-subtitle" id="active-sensors">Température</p>
+  </div>
+  <canvas id="historyChart" height="130"></canvas>
+</div>
 {% endblock %}
 
 {% block scripts %}
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
 <script>
+const sensorConfig = {
+  temperature: { label: 'Température', unit: '°C',  color: '#E24B4A' },
+  humidity:    { label: 'Humidité',    unit: '%',   color: '#378ADD' },
+  ldr:         { label: 'Luminosité',  unit: 'lux', color: '#EF9F27' },
+  mq135:       { label: 'Gaz MQ135',   unit: 'ppm', color: '#639922' },
+  wind:        { label: 'Vent',        unit: 'm/s', color: '#534AB7' }
+};
+
+let rawData = [];
+let activeKeys = ['temperature'];
+
+const chart = new Chart(document.getElementById('historyChart'), {
+  type: 'line',
+  data: { labels: [], datasets: [] },
+  options: {
+    plugins: { legend: { display: true, labels: { font: { size: 12 } } } },
+    scales: {
+      x: { grid: { display: false }, ticks: { font: { size: 11 } } },
+      y: { grid: { color: 'rgba(128,128,128,0.1)' }, ticks: { font: { size: 11 } } }
+    }
+  }
+});
+
+function buildChart() {
+  const labels = rawData.map((_, i) => i + 1);
+  chart.data.labels = labels;
+  chart.data.datasets = activeKeys.map(key => ({
+    label: sensorConfig[key].label + ' (' + sensorConfig[key].unit + ')',
+    data: rawData.map(d => d[key]),
+    borderColor: sensorConfig[key].color,
+    backgroundColor: 'transparent',
+    tension: 0.4,
+    pointRadius: 3,
+    pointBackgroundColor: sensorConfig[key].color
+  }));
+  chart.update();
+
+  document.getElementById('active-sensors').textContent =
+    activeKeys.map(k => sensorConfig[k].label).join(', ');
+}
+
+function toggleSensor(key) {
+  const idx = activeKeys.indexOf(key);
+  const btn = document.getElementById('btn-' + key);
+  const label = btn.querySelector('.sensor-value');
+
+  if (idx === -1) {
+    activeKeys.push(key);
+    btn.classList.add('active');
+    label.textContent = 'Affichée';
+  } else {
+    if (activeKeys.length === 1) return; // garder au moins 1
+    activeKeys.splice(idx, 1);
+    btn.classList.remove('active');
+    label.textContent = 'Masquée';
+  }
+  buildChart();
+}
+
 fetch('/history-data')
   .then(res => res.json())
   .then(data => {
-
-    console.log("DATA:", data);
-
-    let labels = [];
-    let temps = [];
-
-    data.reverse().forEach((d, i) => {
-      labels.push(i);
-      temps.push(d.temperature);
-    });
-
-    const canvas = document.getElementById("chart-temp");
-
-    if (!canvas) {
-      console.error("Canvas introuvable !");
-      return;
-    }
-
-    const ctx = canvas.getContext("2d");
-
-    new Chart(ctx, {
-      type: 'line',
-      data: {
-        labels: labels,
-        datasets: [{
-          label: 'Température',
-          data: temps,
-          borderWidth: 2
-        }]
-      }
-    });
-
+    rawData = data.reverse();
+    buildChart();
   })
-  .catch(err => console.log("Erreur:", err));
+  .catch(err => console.error('Erreur:', err));
 </script>
-
 {% endblock %}

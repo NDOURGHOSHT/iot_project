@@ -1,0 +1,6 @@
+
+body {
+    background-color: #f4f6f9;  /* gris bleuté léger */
+    background-image: radial-gradient(#d0d7e3 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
