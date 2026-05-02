@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+env/
+venv/
+
+# Flask
+instance/
+
+# Base de données
+*.db
+*.sqlite
+
+# ESP32
+esp32/.pio/
+esp32/.vscode/
+esp32/lib/
+esp32/include/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# VSCode
+.vscode/
