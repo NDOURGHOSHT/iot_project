@@ -99,10 +99,24 @@ setInterval(() => {
     });
 }, 10000);
 
-// refresh toutes les 5 secondes
+// au chargement, pré-remplir avec les dernières données
+fetch('/history-data')
+  .then(res => res.json())
+  .then(data => {
+    data.forEach(d => {
+      if (timeLabels.length >= MAX_POINTS) timeLabels.shift();
+      timeLabels.push(new Date().toLocaleTimeString('fr-FR', {hour:'2-digit', minute:'2-digit'}));
+      for (const [id, cfg] of Object.entries(sensorConfig)) {
+        if (history[id].length >= MAX_POINTS) history[id].shift();
+        history[id].push(d[cfg.key]);
+      }
+    });
+    chart.update();
+  });
+
+// ensuite ton setInterval existant prend le relais
 setInterval(() => {
   fetch('/latest')
     .then(res => res.json())
-    .then(data => updateDashboard(data))
-    .catch(err => console.error('Erreur fetch:', err));
+    .then(data => updateDashboard(data));
 }, 5000);
