@@ -30,3 +30,8 @@ pour un mise a jour du .gitignoe
 git add .gitignore
 git commit -m "mise a jour gitignore"
 git push
+
+ Au lieu de coder l'IP en dur, l'ESP32 peut découvrir automatiquement le serveur Flask via mDNS.
+Sur Flask — installe flask-zeroconf ou plus simple, utilise zeroconf :
+bash
+pip install zeroconf

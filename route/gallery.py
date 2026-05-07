@@ -2,6 +2,8 @@ from flask import Blueprint, render_template, request, jsonify
 from db import db
 from datetime import datetime
 import base64
+import requests
+from flask import Response
 
 gallery_bp = Blueprint("gallery", __name__)
 
@@ -19,7 +21,7 @@ def receive_capture():
     data = request.get_json()
     db["captures"].insert_one({
         "image": data["image"],  # base64
-        "source": data.get("source", "webcam"),
+        "source": data.get("source", "ESP32_STREAM"),
         "timestamp": datetime.utcnow()
     })
     return jsonify({"status": "ok"}), 200
@@ -32,10 +34,32 @@ def get_captures():
         c["timestamp"] = c["timestamp"].strftime("%d/%m/%Y %H:%M")
     return jsonify(captures)
 
+# @gallery_bp.route("/api/cam-status")
+# def cam_status():
+#     import urllib.request
+#     try:
+#         urllib.request.urlopen(f"http://192.168.43.200:81/stream", timeout=2)
+#         return jsonify({"online": True})
+#     except:
+#         return jsonify({"online": False})
+
 @gallery_bp.route("/api/cam-status")
 def cam_status():
-    last = db["captures"].find_one(sort=[("_id", -1)])
-    if not last:
+    import socket
+    try:
+        s = socket.create_connection(("192.168.43.200", 81), timeout=2)
+        s.close()
+        return jsonify({"online": True})
+    except:
         return jsonify({"online": False})
-    diff = (datetime.utcnow() - last["timestamp"]).total_seconds()
-    return jsonify({"online": diff < 60})
+
+@gallery_bp.route("/api/stream")
+def proxy_stream():
+    try:
+        r = requests.get("http://192.168.43.200:81/stream", stream=True, timeout=5)
+        return Response(
+            r.iter_content(chunk_size=1024),
+            content_type=r.headers['Content-Type']
+        )
+    except:
+        return jsonify({"error": "stream indisponible"}), 503

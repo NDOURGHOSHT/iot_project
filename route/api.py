@@ -19,6 +19,7 @@ def test():
 @api_bp.route('/api/data', methods=['POST'])
 def receive_data():
     data = request.json
+    data["received_at"] = datetime.now(timezone.utc)
     collection.insert_one(data)
     return {"message": "Donnée reçue"}, 200
 
@@ -33,13 +34,13 @@ def get_data():
 def latest():
     data = collection.find_one(sort=[("_id", -1)])
     if not data:
-        return jsonify({"status": "no data"}), 404
+        return jsonify({"esp32_online": False}), 200
     
     data["_id"] = str(data["_id"])
     
     # statut ESP32
-    if "timestamp" in data:
-        diff = (datetime.now(timezone.utc) - data["timestamp"]).total_seconds()
+    if "received_at" in data:
+        diff = (datetime.utcnow() - data["received_at"]).total_seconds()
         data["esp32_online"] = diff < 30
     else:
         data["esp32_online"] = False

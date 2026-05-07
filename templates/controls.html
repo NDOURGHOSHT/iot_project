@@ -11,68 +11,62 @@
 <p class="section-title">Équipements</p>
 <div class="ctrl-grid">
 
-  <div class="ctrl-card" id="card-lampe1">
-    <div class="ctrl-top">
-      <div class="ctrl-icon" id="icon-lampe1">💡</div>
-      <label class="toggle">
-        <input type="checkbox" id="toggle-lampe1" onchange="toggleDevice('lampe1', this.checked)" disabled>
-        <span class="slider"></span>
-      </label>
+  <div class="ctrl-card" id="card-lampe">
+    <div class="ctrl-header">
+      <div class="ctrl-icon">💡</div>
+      <span class="ctrl-val" id="val-lampe">0%</span>
     </div>
-    <p class="ctrl-name">Lampe 1</p>
-    <p class="ctrl-status" id="status-lampe1">Éteinte</p>
+    <p class="ctrl-name">Lampe</p>
+    <div class="gauge-track"><div class="gauge-fill" id="gauge-lampe" style="width:0%"></div></div>
+    <input type="range" class="ctrl-slider" id="slider-lampe" min="0" max="255" value="{{ state.lampe }}" step="1" oninput="updateSlider('lampe', this.value)" disabled>
   </div>
 
-  <div class="ctrl-card" id="card-lampe2">
-    <div class="ctrl-top">
-      <div class="ctrl-icon" id="icon-lampe2">💡</div>
-      <label class="toggle">
-        <input type="checkbox" id="toggle-lampe2" onchange="toggleDevice('lampe2', this.checked)" disabled>
-        <span class="slider"></span>
-      </label>
+  <div class="ctrl-card" id="card-ventilateurs">
+    <div class="ctrl-header">
+      <div class="ctrl-icon">🌀</div>
+      <span class="ctrl-val" id="val-ventilateurs">0%</span>
     </div>
-    <p class="ctrl-name">Lampe 2</p>
-    <p class="ctrl-status" id="status-lampe2">Éteinte</p>
+    <p class="ctrl-name">Ventilateurs (×2 sync)</p>
+    <div class="gauge-track"><div class="gauge-fill" id="gauge-ventilateurs" style="width:0%"></div></div>
+    <input type="range" class="ctrl-slider" id="slider-ventilateurs" min="0" max="255" value="{{ state.ventilateurs }}" step="1" oninput="updateSlider('ventilateurs', this.value)" disabled>
   </div>
 
-  <div class="ctrl-card" id="card-ventilateur">
-    <div class="ctrl-top">
-      <div class="ctrl-icon" id="icon-ventilateur">🌀</div>
-      <label class="toggle">
-        <input type="checkbox" id="toggle-ventilateur" onchange="toggleDevice('ventilateur', this.checked)" disabled>
-        <span class="slider"></span>
-      </label>
+  <div class="ctrl-card" id="card-fenetre">
+    <div class="ctrl-header">
+      <div class="ctrl-icon"><i class="bi bi-wind"></i></div>
+      <span class="ctrl-val" id="val-fenetre">0°</span>
     </div>
-    <p class="ctrl-name">Ventilateur</p>
-    <p class="ctrl-status" id="status-ventilateur">Arrêté</p>
+    <p class="ctrl-name">Fenêtre (bascule haut)</p>
+    <div class="gauge-track"><div class="gauge-fill" id="gauge-fenetre" style="width:0%"></div></div>
+    <input type="range" class="ctrl-slider" id="slider-fenetre" min="0" max="90" value="{{ state.fenetre }}" step="1" oninput="updateServo('fenetre', this.value, 90)" disabled>
+    <div style="display:flex; justify-content:space-between; font-size:11px; color:#888; margin-top:4px;">
+      <span>Fermée 0°</span><span>Ouverte 90°</span>
+    </div>
   </div>
 
-  <div class="ctrl-card" id="card-fenetre1">
-    <div class="ctrl-top">
-        <div class="ctrl-icon" id="icon-fenetre1">
-             <i class="bi bi-wind"></i>
-        </div>
-      <label class="toggle">
-        <input type="checkbox" id="toggle-fenetre1" onchange="toggleDevice('fenetre1', this.checked)" disabled>
-        <span class="slider"></span>
-      </label>
+  <div class="ctrl-card" id="card-porte">
+    <div class="ctrl-header">
+      <div class="ctrl-icon"><i class="bi bi-door-open"></i></div>
+      <span class="ctrl-val" id="val-porte">0%</span>
     </div>
-    <p class="ctrl-name">Fenêtre 1</p>
-    <p class="ctrl-status" id="status-fenetre1">Fermée</p>
+    <p class="ctrl-name">Porte (glissière)</p>
+    <div class="gauge-track"><div class="gauge-fill" id="gauge-porte" style="width:0%"></div></div>
+    <input type="range" class="ctrl-slider" id="slider-porte" min="0" max="180" value="{{ state.porte }}" step="1" oninput="updateServo('porte', this.value, 180)" disabled>
+    <div style="display:flex; justify-content:space-between; font-size:11px; color:#888; margin-top:4px;">
+      <span>Fermée 0°</span><span>Ouverte 180°</span>
+    </div>
   </div>
 
-  <div class="ctrl-card" id="card-fenetre2">
-    <div class="ctrl-top">
-        <div class="ctrl-icon" id="icon-fenetre1">
-             <i class="bi bi-wind"></i>
-        </div>
+  <div class="ctrl-card" id="card-chauffage">
+    <div class="ctrl-header">
+      <div class="ctrl-icon">🔥</div>
       <label class="toggle">
-        <input type="checkbox" id="toggle-fenetre2" onchange="toggleDevice('fenetre2', this.checked)" disabled>
-        <span class="slider"></span>
+        <input type="checkbox" id="toggle-chauffage" onchange="toggleChauffage(this.checked)" disabled>
+        <span class="slider-toggle"></span>
       </label>
     </div>
-    <p class="ctrl-name">Fenêtre 2</p>
-    <p class="ctrl-status" id="status-fenetre2">Fermée</p>
+    <p class="ctrl-name">Lampe thermique</p>
+    <span class="ctrl-val" id="val-chauffage">{% if state.chauffage %}Allumée{% else %}Éteinte{% endif %}</span>
   </div>
 
 </div>
@@ -81,9 +75,9 @@
 <div class="log-card">
   <div id="log-list">
     <div class="log-entry">
-      <span class="log-name" style="color:var(--color-text-secondary)">Aucune action pour l'instant</span>
-      <span class="log-time">—</span>
-      <span class="log-badge badge-off">—</span>
+      <span style="color:#888">Aucune action</span>
+      <span style="font-size:12px;color:#888">—</span>
+      <span class="log-badge" style="background:#f4f6f9;color:#888">—</span>
     </div>
   </div>
 </div>

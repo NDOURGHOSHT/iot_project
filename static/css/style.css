@@ -8,8 +8,9 @@ body {
 .section-title { font-size: 12px; font-weight: 500; color: var(--color-text-secondary, #888); text-transform: uppercase; letter-spacing: 0.06em; margin: 0 0 10px;  }
 .sensor-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin-bottom: 1.5rem; }
 .sensor-card { background: #fff; border: 0.5px solid #e0e0e0; border-radius: 12px; padding: 1rem 1.1rem; position: relative; overflow: hidden; cursor: pointer; transition: all 0.6s cubic-bezier(0.23, 1, 0.320, 1) }
+.sensor-card:hover { border-color: #aaa; background: #d7d9db; transform: translateY(-2px); }
 .sensor-card::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; }
-.sensor-card:hover{ rotate: 5deg; }
+
 .sensor-card.active { border: 1.5px solid #aaa; }
 .sensor-card.temp::before { background: #E24B4A; }
 .sensor-card.hum::before  { background: #378ADD; }
@@ -42,30 +43,31 @@ body {
 .mode-btn { flex: 1; padding: 9px; border-radius: var(--border-radius-md, 8px); border: 0.5px solid #e0e0e0; background: #fff; font-size: 13px; cursor: pointer; color: #888; transition: all 0.15s; }
 .mode-btn:hover { background: #f4f6f9; border-color: #ccc; }
 .mode-btn.active { background: #EAF3DE; border-color: #97C459; color: #3B6D11; font-weight: 500; }
+
 .ctrl-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; margin-bottom: 1.5rem; }
 .ctrl-card { background: #fff; border: 0.5px solid #e0e0e0; border-radius: 12px; padding: 1rem 1.25rem; transition: border-color 0.2s, transform 0.15s, background 0.2s; }
 .ctrl-card:hover { border-color: #aaa; background: #f4f6f9; transform: translateY(-2px); }
 .ctrl-card.on { border-color: #639922; }
 .ctrl-card.on:hover { border-color: #3B6D11; background: #EAF3DE; }
 .ctrl-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
-.ctrl-icon { width: 38px; height: 38px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; background: #f4f6f9; border: 0.5px solid #e0e0e0; transition: background 0.2s; }
-.ctrl-icon.on { background: #EAF3DE; border-color: #97C459; }
 .ctrl-name { font-size: 14px; font-weight: 500; margin: 0 0 2px; }
-.ctrl-status { font-size: 12px; color: #888; margin: 0; transition: color 0.2s; }
-.ctrl-status.on { color: #3B6D11; }
 .toggle { position: relative; width: 44px; height: 24px; flex-shrink: 0; }
-.toggle input { opacity: 0; width: 0; height: 0; }
-.slider { position: absolute; inset: 0; background: #ddd; border-radius: 24px; cursor: pointer; transition: background 0.2s; }
-.slider:before { content: ''; position: absolute; width: 18px; height: 18px; left: 3px; top: 3px; background: white; border-radius: 50%; transition: transform 0.2s; }
-input:checked + .slider { background: #639922; }
-input:checked + .slider:before { transform: translateX(20px); }
-input:disabled + .slider { opacity: 0.4; cursor: not-allowed; }
+.toggle input { display: none; }
+.toggle .slider-toggle { position: absolute; inset: 0; background: #ddd; border-radius: 24px; cursor: pointer; transition: background 0.2s; }
+.toggle .slider-toggle:before { content: ''; position: absolute; width: 18px; height: 18px; left: 3px; top: 3px; background: white; border-radius: 50%; transition: transform 0.2s; }
+input:checked + .slider-toggle { background: #639922; }
+input:checked + .slider-toggle:before { transform: translateX(20px); }
+input:disabled + .slider-toggle { opacity: 0.4; cursor: not-allowed; }
+.gauge-track { width: 100%; height: 6px; background: #eee; border-radius: 6px; margin-bottom: 6px; overflow: hidden; }
+.gauge-fill { height: 100%; border-radius: 6px; transition: width 0.2s, background 0.3s; }
+.ctrl-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+.ctrl-val { font-size: 13px; font-weight: 500; color: #888; }
+.ctrl-slider { width: 100%; margin-top: 6px; accent-color: #639922; }
 .log-card { background: #fff; border: 0.5px solid #e0e0e0; border-radius: 12px; padding: 1rem 1.25rem; }
 .log-entry { display: flex; justify-content: space-between; align-items: center; padding: 7px 0; border-bottom: 0.5px solid #f0f0f0; font-size: 13px; }
 .log-entry:last-child { border-bottom: none; }
 .log-badge { font-size: 11px; padding: 2px 8px; border-radius: 20px; }
-.badge-on  { background: #EAF3DE; color: #3B6D11; }
-.badge-off { background: #f4f6f9; color: #888; }
+
 
 /* Responsive */
 canvas {

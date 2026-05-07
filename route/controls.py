@@ -8,11 +8,11 @@ controls_bp = Blueprint('controls', __name__)
 
 DEFAULT_STATE = {
     "mode": "auto",  # "auto" ou "manuel"
-    "lampe1": False,
-    "lampe2": False,
-    "ventilateur": False,
-    "fenetre1": False,
-    "fenetre2": False
+    "lampe": 0,
+    "ventilateurs": 0,
+    "fenetre": 90,
+    "porte": 90,
+    "chauffage": False
 }
 
 def get_state():
@@ -35,7 +35,6 @@ def controls_page():
 
 @controls_bp.route("/api/commands", methods=["GET"])
 def get_commands():
-    # ESP32 poll cette route
     return jsonify(get_state())
 
 @controls_bp.route("/api/commands", methods=["POST"])

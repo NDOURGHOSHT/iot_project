@@ -40,8 +40,10 @@
 <p class="section-title">État du système</p>
 <div class="status-row">
   <div class="status-card">
-    <p class="status-label"><span class="status-dot dot-green"></span> ESP32</p>
-    <p class="status-val">En ligne</p>
+    <p class="status-label">
+      <span class="status-dot dot-red dot-esp"></span> ESP32
+    </p>
+    <p class="status-val val-esp">Hors ligne</p>
   </div>
   <div class="status-card">
     <p class="status-label"><span class="status-dot dot-red"></span> Caméra</p>
@@ -58,6 +60,8 @@
   </div>
   <canvas id="sensorChart" height="110"></canvas>
 </div>
+
+
 {% endblock %}
 
 {% block scripts %}

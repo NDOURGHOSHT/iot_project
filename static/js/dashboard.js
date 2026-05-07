@@ -65,13 +65,13 @@ function updateDashboard(data) {
   document.getElementById('bar-wind').style.width = Math.min(data.wind / 20 * 100, 100) + '%';
 
   // statut ESP32
-  const espDot  = document.querySelector('.dot-esp');
-  const espVal  = document.querySelector('.val-esp');
+  const espDot = document.querySelector('.dot-esp');
+  const espVal = document.querySelector('.val-esp');
   if (data.esp32_online) {
-    espDot.className = 'status-dot dot-green';
+    espDot.className = 'status-dot dot-green dot-esp';
     espVal.textContent = 'En ligne';
   } else {
-    espDot.className = 'status-dot dot-red';
+    espDot.className = 'status-dot dot-red dot-esp';
     espVal.textContent = 'Hors ligne';
   }
 
